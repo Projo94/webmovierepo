@@ -1,0 +1,103 @@
+USE [DBMovies]
+GO
+/****** Object:  StoredProcedure [dbo].[GetTVProgramsSP]    Script Date: 9/26/2021 6:12:05 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[GetTVProgramsSP]
+
+ @Type nvarchar(10),
+ @PageNumber AS INT,
+ @RowsOfPage AS INT,
+ @SearchValue nvarchar(30)=null 
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	----------------------------------------------------
+	DECLARE @VARYEAR  AS INT = null
+
+	if (@SearchValue Like '%after %') 
+	
+	SET @VARYEAR = Substring(@SearchValue, 6,9)
+	----------------------------------------------------
+	DECLARE @VARSTARS  AS INT = null
+
+	if (@SearchValue Like '% stars' and @SearchValue  not Like 'at least%') 
+	SET @VARSTARS = Substring(@SearchValue, 0,2)
+	----------------------------------------------------
+	DECLARE @VARSTARSATLEAST  AS INT = null
+
+	if(@SearchValue Like 'at least%' and @SearchValue Like '% stars')
+	SET @VARSTARSATLEAST = Substring(@SearchValue, 10,1)
+
+	-----------------------------------------------------
+	DECLARE @VAROLDERTHAN  AS INT = null
+	
+	 if(@SearchValue Like 'older than%' and @SearchValue Like '% years') 
+	SET @VAROLDERTHAN = RTRIM(LTRIM((Substring(@SearchValue, 12,2))))
+
+
+
+
+
+
+ if @Type = 'Movie'
+Select tvp.IDTVProgram, tvp.Title, tvp.Description, tvp.ReleaseDate,  tvp.PictureDisplay, Round(Cast(SUM(r.NumberOfStars) as float) /COUNT(tvpr.IDTVProgram),2) AverageRating from TVPrograms tvp 
+join TVProgramRatings tvpr on tvp.IDTVProgram  = tvpr.IDTVProgram 
+left join Ratings r on tvpr.IDRating = r.IDRating
+join TypeOfPrograms tp on tvp.TypeOfProgramID = tp.IDTypeOfProgram
+join ActorTVPrograms atv on tvp.IDTVProgram = atv.IDTVProgram
+
+group by tvp.IDTVProgram, tvp.Title, tvp.Description, tp.IDTypeOfProgram, tvp.ReleaseDate, tvp.PictureDisplay, atv.IDTVProgram
+
+having tp.IDTypeOfProgram = 1 and 
+	(@SearchValue is null or
+	tvp.Title LIKE '%'+ @SearchValue+ '%'  or
+	tvp.Description LIKE '%'+ @SearchValue+ '%'  or
+	YEAR(tvp.ReleaseDate) LIKE '%'+ @SearchValue+ '%' or
+	(@VARYEAR is not null and YEAR(tvp.ReleaseDate)>@VARYEAR) or 
+	(@VARSTARS is not null and  Round(Cast(SUM(r.NumberOfStars) as float) /COUNT(tvpr.IDTVProgram),2)=@VARSTARS) or
+	(@VARSTARSATLEAST is not null and  Round(Cast(SUM(r.NumberOfStars) as float) /COUNT(tvpr.IDTVProgram),2)>=@VARSTARSATLEAST) or
+	(@VAROLDERTHAN is not null and YEAR(GETDATE())- YEAR(tvp.ReleaseDate) > @VAROLDERTHAN) 
+
+	)
+
+order by  AverageRating desc
+OFFSET (@PageNumber-1)*@RowsOfPage ROWS
+FETCH NEXT @RowsOfPage ROWS ONLY
+
+if @Type = 'TV show'
+Select tvp.IDTVProgram, tvp.Title, tvp.Description, tvp.ReleaseDate,  tvp.PictureDisplay, '0' AverageRating from TVPrograms tvp 
+join TVProgramRatings tvpr on tvp.IDTVProgram  = tvpr.IDTVProgram 
+join TypeOfPrograms tp on tvp.TypeOfProgramID = tp.IDTypeOfProgram
+join ActorTVPrograms atv on tvp.IDTVProgram = atv.IDTVProgram
+
+group by tvp.IDTVProgram, tvp.Title, tvp.Description, tp.IDTypeOfProgram, tvp.ReleaseDate, tvp.PictureDisplay, atv.IDTVProgram
+
+having tp.IDTypeOfProgram = 2 and 
+	(@SearchValue is null or
+	tvp.Title LIKE '%'+ @SearchValue+ '%'  or
+	tvp.Description LIKE '%'+ @SearchValue+ '%'  or
+	YEAR(tvp.ReleaseDate) LIKE '%'+ @SearchValue+ '%' or
+	(@VARYEAR is not null and YEAR(tvp.ReleaseDate)>@VARYEAR) or 
+	(@VAROLDERTHAN is not null and YEAR(GETDATE())- YEAR(tvp.ReleaseDate) > @VAROLDERTHAN) 
+
+	)
+
+order by  AverageRating desc
+OFFSET (@PageNumber-1)*@RowsOfPage ROWS
+FETCH NEXT @RowsOfPage ROWS ONLY
+
+
+
+
+
+END
