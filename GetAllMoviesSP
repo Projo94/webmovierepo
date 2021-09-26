@@ -1,0 +1,30 @@
+USE [DBMovies]
+GO
+/****** Object:  StoredProcedure [dbo].[GetAllMoviesSP]    Script Date: 9/26/2021 6:10:20 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetAllMoviesSP] 
+	
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+Select tvp.IDTVProgram, tvp.Title, tvp.Description, tvp.ReleaseDate,  tvp.PictureDisplay, Round(Cast(SUM(r.NumberOfStars) as float) /COUNT(tvpr.IDTVProgram),2) AverageRating from TVPrograms tvp 
+left join TVProgramRatings tvpr on tvp.IDTVProgram  = tvpr.IDTVProgram 
+left join Ratings r on tvpr.IDRating = r.IDRating
+join TypeOfPrograms tp on tvp.TypeOfProgramID = tp.IDTypeOfProgram
+join ActorTVPrograms atv on tvp.IDTVProgram = atv.IDTVProgram
+
+group by tvp.IDTVProgram, tvp.Title, tvp.Description, tp.IDTypeOfProgram, tvp.ReleaseDate, tvp.PictureDisplay, atv.IDTVProgram
+
+having tp.IDTypeOfProgram = 1 
+END
