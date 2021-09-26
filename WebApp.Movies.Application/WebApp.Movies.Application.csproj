@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Features\MovieRatings\Queries\**" />
+	  <EmbeddedResource Remove="Features\MovieRatings\Queries\**" />
+	  <None Remove="Features\MovieRatings\Queries\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="Dapper" Version="2.0.90" />
+		<PackageReference Include="DependencyInjection.AutoRegistration" Version="3.0.0" />
+		<PackageReference Include="FluentValidation" Version="10.2.3" />
+		<PackageReference Include="MediatR" Version="9.0.0" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+		<PackageReference Include="System.Collections" Version="4.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WebApp.Movies.Domain\WebApp.Movies.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

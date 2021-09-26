@@ -1,0 +1,130 @@
+﻿@page "/tvprograms"
+@page "/"
+@page "/index"
+@inherits TVProgramBase
+@inject IToastService toastService
+
+
+<p>
+
+    <input value="@searchValue" @oninput="@ValueChanged" />
+
+
+    <MatSlideToggle TValue="bool" Label=" Switch to Movies/TV shows" ValueChanged="@(e=>Toggle(e))"></MatSlideToggle>
+</p>
+
+
+
+
+
+
+@if (MoviesList == null)
+{
+<div class="spinner"></div> }
+else
+{
+
+
+<div>
+
+
+    @if (!Toggled)
+    {
+<div class="row align-items-start">
+
+    <h1 class="col">Movies <span class="badge badge-secondary">Top 10</span></h1>
+
+    <div class="card-footer text-center">
+        <a href="" class="btn btn-primary m-1" @onclick="async  () => await LoadTenMore()">Load more...</a>
+    </div>
+
+</div>
+
+
+                    <div class="flex-container">
+
+                        @foreach (var m in MoviesList)
+                        {
+
+    <div class="item">
+
+        <div class="card-header">
+            <h4>@m.Title</h4>
+            <h6><i class="fas fa-star" style="font-size:15px;color:black;"></i>   @m.AverageRating</h6>
+            <h6> @m.ReleaseDate</h6>
+        </div>
+
+        @if (m.PictureDisplay is not null)
+        {
+<img class="card-img-top" src="@convertImageToDisplay(m.PictureDisplay.ToString())" />}
+
+        <div class="">
+            <p style="font-size: 15px;"><b>Description:</b>  @m.Description</p>
+        </div>
+
+        <p style="font-size: 15px;"><b>Actors:</b></p>
+
+        @foreach (var actor in m.actors)
+        {
+<p>@actor.Name</p>      }
+
+
+
+
+
+
+
+
+
+    </div>}
+
+                    </div> }
+                else
+                {
+<div class="row align-items-start">
+
+    <h1 class="col">TV shows <span class="badge badge-secondary">Top 10</span></h1>
+
+    <div class="card-footer text-center">
+        <a href="" class="btn btn-primary m-1" @onclick="async  () => await LoadTenMore()">Load more...</a>
+    </div>
+
+</div>
+
+
+                    <div class="flex-container">
+
+                        @foreach (var m in TVShowsList)
+                        {
+
+    <div class="item">
+        <div class="card-header">
+            <h4>@m.Title</h4>
+            @*<h6><i class="fas fa-star" style="font-size:15px;color:black;"></i>   @m.AverageRating</h6>*@
+            <h6> @m.ReleaseDate</h6>
+        </div>
+
+        @if (m.PictureDisplay is not null)
+        {
+<img class="card-img-top" src="@convertImageToDisplay(m.PictureDisplay.ToString())" />}
+
+        <div class="card-body">
+            <p style="font-size: 15px;"><b>Description:</b>  @m.Description</p>
+        </div>
+
+        <p style="font-size: 15px;"><b>Participants:</b></p>
+
+        @foreach (var actor in m.actors)
+        {
+<p>@actor.Name</p>      }
+
+    </div>}
+
+                    </div>}
+
+
+</div>}
+
+
+
+

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Logs\**" />
+	  <Content Remove="Logs\**" />
+	  <EmbeddedResource Remove="Logs\**" />
+	  <None Remove="Logs\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WebApp.Movies.Application\WebApp.Movies.Application.csproj" />
+		<ProjectReference Include="..\WebApp.Movies.Domain\WebApp.Movies.Domain.csproj" />
+		<ProjectReference Include="..\WebApp.Movies.Identity\WebApp.Movies.Identity.csproj" />
+		<ProjectReference Include="..\WebApp.Movies.Infrastructure\WebApp.Movies.Infrastructure.csproj" />
+		<ProjectReference Include="..\WebApp.Movies.Persistance\WebApp.Movies.Persistance.csproj" />
+	</ItemGroup>
+
+</Project>

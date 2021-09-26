@@ -1,0 +1,6 @@
+dotnet ef migrations add initialMigration --project C:\Users\MarkoProjovic\Desktop\Private\Projects\WebApp.Movies\.vs\WebApp.Movies\WebApp.Movies.Persistance --startup-project C:\Users\MarkoProjovic\Desktop\Private\Projects\WebApp.Movies\.vs\WebApp.Movies\WebApp.Movies.Api
+
+
+
+
+ dotnet ef database update --project C:\Users\MarkoProjovic\Desktop\Private\Projects\WebApp.Movies\.vs\WebApp.Movies\WebApp.Movies.Persistance --startup-project C:\Users\MarkoProjovic\Desktop\Private\Projects\WebApp.Movies\.vs\WebApp.Movies\WebApp.Movies.Api

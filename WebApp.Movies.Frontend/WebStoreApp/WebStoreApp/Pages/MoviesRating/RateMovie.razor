@@ -1,0 +1,50 @@
+﻿@page "/ratemovie"
+
+@inherits RateMovieBase
+@inject IToastService toastService
+
+
+
+
+
+<div class="flex-container">
+
+    @foreach (var m in MoviesList)
+    {
+
+<div class="item">
+
+    <div class="card-header">
+        <h4>@m.Title</h4>
+        <h6><i class="fas fa-star" style="font-size:15px;color:black;"></i>   @m.AverageRating</h6>
+        <h6> @m.ReleaseDate</h6>
+    </div>
+
+    @if (m.PictureDisplay is not null)
+    {
+<img class="card-img-top" src="@convertImageToDisplay(m.PictureDisplay.ToString())" />}
+
+    <div class="">
+        <p style="font-size: 15px;"><b>Description:</b>  @m.Description</p>
+    </div>
+
+    <p style="font-size: 15px;"><b>Actors:</b></p>
+
+    @foreach (var actor in m.actors)
+    {
+<p>@actor.Name</p>}
+
+
+
+
+    <div>
+
+        <div class="starContainer"><RadzenRating Change=@(args => OnChange(args, m.IDTVProgram)) /></div>
+    </div>
+
+
+
+
+
+</div>}
+</div>

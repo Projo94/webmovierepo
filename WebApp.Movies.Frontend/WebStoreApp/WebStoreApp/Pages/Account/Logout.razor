@@ -1,0 +1,24 @@
+﻿@page "/account/logout"
+
+@inject AppState AppState
+@inject ILocalStorageService _localStorageService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider authenticationStateProvider
+<h3>Logout</h3>
+
+
+
+<h3>Successfully logged out</h3>
+
+@code { protected async override void OnInitialized()
+            {
+
+                await _localStorageService.RemoveItemAsync("User");
+
+                AppState.LoggedIn = false;
+
+                await authenticationStateProvider.GetAuthenticationStateAsync();
+
+                Navigation.NavigateTo("/account/login");
+
+            } }
