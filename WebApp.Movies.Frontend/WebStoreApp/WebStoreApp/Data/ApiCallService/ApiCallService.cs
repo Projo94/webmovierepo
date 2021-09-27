@@ -100,12 +100,15 @@ namespace WebApp.Data.ApiCallService
 
             try
             {
-                var r = await client.PostAsJsonAsync(url, obj);
 
-                //var result = r.Content.ReadAsStringAsync().Result;
+                var userInfo = await _localStorageService.GetItemAsync<LocalUserInfo>("User");
 
-                //return result;
+                var token = userInfo.token;
 
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                await client.PostAsJsonAsync(url, obj);
             }
             catch (Exception ex)
             {
